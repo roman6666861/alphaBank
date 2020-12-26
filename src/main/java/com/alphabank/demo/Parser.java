@@ -1,44 +1,46 @@
 package com.alphabank.demo;
 
 import com.alphabank.demo.entity.Storage;
-import lombok.Getter;
-import lombok.Setter;
+import com.alphabank.demo.storage.ClassPathFile;
+import com.alphabank.demo.storage.ExternalFile;
+import com.alphabank.demo.storage.ParseType;
+import com.alphabank.demo.storage.UrlType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.util.Objects;
+
 @Slf4j
 @Component
 public class Parser {
 
     private MarshallerWrapper marshallerWrapper;
 
-    @Setter
-    private String input;
-
     @Autowired
     public Parser(MarshallerWrapper marshallerWrapper) {
         this.marshallerWrapper = marshallerWrapper;
     }
-    public Storage parseToStorage() throws IOException {
-        Storage output = null;
+
+    public Storage parse(String input) throws IOException {
         String[] values = input.split(":");
-        if (values[0].equals("file")) {
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(values[1]));
-            output = marshallerWrapper.unmarshallXml(bufferedInputStream);
+        ParseType parseType = chooseType(values[0]);
+        Storage result = Objects.requireNonNull(parseType).parse(values[1], marshallerWrapper);
+        log.info("output result is " + result);
+        return result;
+    }
+
+    private ParseType chooseType(String value) {
+        switch (value) {
+            case ("file"):
+                return new ExternalFile();
+            case ("classpath"):
+                return new ClassPathFile();
+            case ("url"):
+                return new UrlType();
         }
-        else if (values[0].equals("classpath")){
-            output = marshallerWrapper.unmarshallXml(this.getClass().getClassLoader().getResourceAsStream("input.xml"));
-        }
-        else if (values[0].equals("url")) {
-            output = marshallerWrapper.unmarshallXml(new BufferedInputStream(new URL(values[1]).openStream()));
-        }
-        log.info("output is " + output);
-        return output;
+        return null;
     }
 }

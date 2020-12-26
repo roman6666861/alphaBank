@@ -4,30 +4,38 @@ import com.alphabank.demo.entity.Storage;
 import com.alphabank.demo.service.MainService;
 import com.alphabank.demo.service.MainServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.Arrays;
 
 @Slf4j
 @SpringBootApplication
 public class DemoApplication {
 
+    private static ApplicationContext context;
+    @Autowired
+    public static void setContext(ApplicationContext context) {
+        DemoApplication.context = context;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
-        ApplicationContext context = new AnnotationConfigApplicationContext(DemoApplication.class);
         Parser parser = context.getBean(Parser.class);
         MainServiceImpl mainService = (MainServiceImpl) context.getBean(MainService.class);
-        parser.setInput(Arrays.toString(args).isEmpty()? "" : args[0]);
         try {
-            Storage storage = parser.parseToStorage();
+            parser.parse(args[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Storage storage = parser.parse(args[0]);
             log.info("Storage is " + storage);
             mainService.save(storage);
         } catch (IOException e) {
