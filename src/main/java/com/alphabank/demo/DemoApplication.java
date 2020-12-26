@@ -4,7 +4,6 @@ import com.alphabank.demo.entity.Storage;
 import com.alphabank.demo.service.MainService;
 import com.alphabank.demo.service.MainServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -19,14 +18,9 @@ import java.io.IOException;
 @SpringBootApplication
 public class DemoApplication {
 
-    private static ApplicationContext context;
-    @Autowired
-    public static void setContext(ApplicationContext context) {
-        DemoApplication.context = context;
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
+        ApplicationContext context = new AnnotationConfigApplicationContext(DemoApplication.class);
         Parser parser = context.getBean(Parser.class);
         MainServiceImpl mainService = (MainServiceImpl) context.getBean(MainService.class);
         try {
