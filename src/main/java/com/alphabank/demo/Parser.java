@@ -30,7 +30,6 @@ public class Parser {
     }
 
     private ParseType chooseType(String value) {
-        log.info("Parser. map " + map);
         ParseType parseType = map.get(value);
         log.info("Parser. chooseType " + parseType);
         return parseType;
