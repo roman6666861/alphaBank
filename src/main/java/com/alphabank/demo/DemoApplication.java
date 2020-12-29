@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -19,15 +20,9 @@ import java.io.IOException;
 public class DemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-        ApplicationContext context = new AnnotationConfigApplicationContext(DemoApplication.class);
+        ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
         Parser parser = context.getBean(Parser.class);
         MainServiceImpl mainService = (MainServiceImpl) context.getBean(MainService.class);
-        try {
-            parser.parse(args[0]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         try {
             Storage storage = parser.parse(args[0]);
             log.info("Storage is " + storage);
