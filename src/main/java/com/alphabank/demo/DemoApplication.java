@@ -20,7 +20,7 @@ public class DemoApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
         Parser parser = context.getBean(Parser.class);
-        MainServiceImpl mainService = (MainServiceImpl) context.getBean(MainService.class);
+        MainService mainService = context.getBean(MainService.class);
         try {
             Storage storage = parser.parse(args[0]);
             log.info("Storage is " + storage);
