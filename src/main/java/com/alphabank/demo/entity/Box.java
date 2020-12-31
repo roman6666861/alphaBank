@@ -2,10 +2,12 @@ package com.alphabank.demo.entity;
 
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Data
@@ -19,11 +21,10 @@ public class Box {
     @XmlAttribute
     private long id;
 
-    @OneToMany(mappedBy = "parent",
-            fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "parent")
     private List<Box> Box;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name="ID", insertable = false, updatable = false)
     private Box parent;
 

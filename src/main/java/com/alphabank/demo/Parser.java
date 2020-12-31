@@ -1,9 +1,7 @@
 package com.alphabank.demo;
 
 import com.alphabank.demo.entity.Storage;
-import com.alphabank.demo.storage.ClassPathFile;
 import com.alphabank.demo.storage.ParseType;
-import com.alphabank.demo.storage.UrlType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
